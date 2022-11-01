@@ -41,17 +41,28 @@ class WeatherForecast:
 
     def parse_data(self, date_as_string, forecast):
 
-        value = forecast.get('precip', -1)
+        precip = forecast.get('precip', -1)
+        snow = forecast.get('snow', -1)
 
-        if value > 0:
+        if precip > 0 and snow > 0:
+            print(f"\nW dniu {date_as_string} w Poznaniu "
+                  "będzie padać śnieg z deszczem :(")
+            return ("Będzie padać śnieg z deszczem")
+
+        elif precip == 0 and snow == 0:
+            print(f"\nW dniu {date_as_string} w Poznaniu nie"
+                  " będzie padać! Miłego dnia :)")
+            return("Nie będzie padać")
+
+        elif precip > 0:
             print(f"\nW dniu {date_as_string} w Poznaniu "
                   "będzie padać deszcz! Zabierz ze sobą parasol :)")
             return("Będzie padać deszcz")
 
-        elif value == 0:
-            print(f"\nW dniu {date_as_string} w Poznaniu nie"
-                  " będzie padać! Miłego dnia :)")
-            return("Nie będzie padać")
+        elif snow > 0:
+            print(f"\nW dniu {date_as_string} w Poznaniu "
+                  "będzie padać śnieg! Ubierz coś ciepłego :)")
+            return("Będzie padać śnieg")
 
         else:
             print(f"\nNie wiem czy w dniu {date_as_string} będzie"
@@ -103,12 +114,12 @@ class WeatherForecast:
             return self.parse_data(date_as_string, data_from_api)
 
     def __getitem__(self, item):
-        '''
+        # '''
         if not self.csv_dates.get(item):
             print({'precip': 'unknown', 'snow': 'unknown'})
         else:
             print(self.csv_dates.get(item))
-        '''
+        # '''
 
         if not self.csv_dates.get(item):
             return {'precip': 'unknown', 'snow': 'unknown'}
@@ -142,9 +153,12 @@ wf.get_data(user_input_date)
 '''
 wf[date] da odpowiedź na temat pogody dla podanej daty (według specyfikacji
 z poprzedniego zadania)
-'''
+
 wf["2022-11-10"]
+wf["2022-11-05"]
+wf["2022-11-16"]
 wf["2022-11-17"]
+'''
 
 '''
 wf.items() zwróci generator tupli w formacie (data, pogoda) dla
@@ -159,8 +173,9 @@ zmienna = wf.items()
 
 '''
 wf to iterator zwracający wszystkie daty, dla których znana jest pogoda
-'''
+
 for day in wf:  # wf to obiekt, po którym można iterować
     print(day)
+'''
 
 # %%
